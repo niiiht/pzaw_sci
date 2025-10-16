@@ -18,7 +18,7 @@ const server = createServer((req, res) => {
 
   if(req.url === '/favicon.ico' && req.method=== "GET"){
 
-  res.writeHead(200, { 'Content-Type': 'image/x-icon' });
+  res.writeHead(200, { 'Content-Type': 'image/vnd.microsoft.icon' });
 
     res.end(icon);
   }
