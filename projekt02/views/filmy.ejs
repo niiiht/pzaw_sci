@@ -1,0 +1,12 @@
+
+
+<ul>
+    <% nazwa.forEach(film => { %>
+        <li><%= film.name %></li>
+    <% }) %>
+</ul>
+<from method="post"  name="new_movie">
+    <input type="text" name ="movie_name"><br>
+    <input type="submit" value="Dodaj">
+
+</from>
