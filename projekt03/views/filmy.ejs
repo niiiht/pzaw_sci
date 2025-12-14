@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watchlist</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="container">
+    <h3>watchlist</h3>
+        <ul>
+    <% nazwa.forEach(film => { %>
+        <li> <strong><%= film.name %></strong><br><div class="box">
+             <img src = "<%= film.link %>" alt = "<%= film.name %> photo">
+             <p class="syn"><%= film.synopis %></p>
+       </div>
+
+       <div class="box">
+       <form method="post" action="/movies/delete">
+        <input type="hidden" name="movie_id" value="<%= film.movie_id %>">
+        <input class="button" type ="submit" value="Delete">
+       </form>
+
+         <form method="post" action="/movies/update">
+        <input type="hidden" name="movie_id" value="<%= film.movie_id %>">
+        <input class="button" type ="submit" value="Update">
+       </form>
+       </div>
+       
+
+    
+    </li>
+    <% }) %>
+</ul>
+
+
+</div>
+
+    <a href= "add_movie" target="_self">+</a>
+</body>
+</html>
+

@@ -1,0 +1,35 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>New movie</title>
+        <link rel="stylesheet" href="/form_style.css">
+    </head>
+    <body>
+          <h3>new movie</h3>
+        <section>
+      
+        <form method="post"  action="/movies/new" name="new_movie">
+         <label for="movie_name">Movie name</label><br>   
+        <input  type="text" name ="movie_name" required><br>
+        <label for="movie_synopis">Movie synopis</label><br>  
+        <textarea id = "movie_synopis"name ="movie_synopis"  rows = "4" col="4" required></textarea><br>
+        <label for="movie_cover">Movie cover (link)</label><br>  
+        <input type="text" name ="movie_cover" ><br>
+        <input  type="submit" value="+">
+         </form>
+        </section>
+
+
+   
+    </body>
+    <script>
+    const ta = document.getElementById("movie_synopis");
+
+    ta.addEventListener("input", () => {
+        ta.style.height = "auto";
+        ta.style.height = ta.scrollHeight + "px";
+        });
+</script>
+    </html>
