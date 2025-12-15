@@ -53,7 +53,18 @@ img{
 .syn{
     white-space: pre-line;
 }
-
+.uni{
+    background-image: url('uni.gif');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    
+}
 .button{
     background-color: palevioletred;
     padding: 10px;

@@ -7,14 +7,16 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-<div class="container">
+<div class="uni">
+    <div class="container">
     <h3>watchlist</h3>
+  
         <ul>
-    <% nazwa.forEach(film => { %>
-        <li> <strong><%= film.name %></strong><br><div class="box">
-             <img src = "<%= film.link %>" alt = "<%= film.name %> photo">
-             <p class="syn"><%= film.synopis %></p>
-       </div>
+        <% nazwa.forEach(film => { %>
+            <li> <strong><%= film.name %></strong><br><div class="box">
+            <img src = "<%= film.link %>" alt = "<%= film.name %> photo">
+            <p class="syn"><%= film.synopis %></p>
+            </div>
 
        <div class="box">
        <form method="post" action="/movies/delete">
@@ -30,14 +32,15 @@
        
 
     
-    </li>
-    <% }) %>
-</ul>
+            </li>
+            <% }) %>
+        </ul>
+        <a href= "add_movie" target="_self">+</a>
 
+    </div>
 
+ 
 </div>
-
-    <a href= "add_movie" target="_self">+</a>
 </body>
 </html>
 
