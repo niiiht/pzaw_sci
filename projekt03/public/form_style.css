@@ -5,13 +5,28 @@
 body{
     background-color: lightpink;
 }
+
+
+
 h3{
     font-size: 40px;
     font-family: cursive;
     font-style: italic;
     text-align: center;
 }
-
+.uni{
+    background-image: url('uni.gif');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    position: relative;
+    
+}
 section{
     display: flex;
     justify-content: center;
@@ -77,6 +92,22 @@ input[type=submit]{
     border-radius:10px;
     border: 4px solid palevioletred;
     background-color:palevioletred;  
+}
+
+button{
+   display: block;
+   padding: 5px;
+    border: 4px solid palevioletred;
+    background-color:palevioletred; 
+    color: white;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    position: absolute;
+    left: 20px;
+    top: 0;
+   
 }
 
 input[type=submit]:hover{

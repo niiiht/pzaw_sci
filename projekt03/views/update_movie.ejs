@@ -8,6 +8,9 @@
     </head>
     <body>
           <h3>update movie</h3>
+            
+              <div class="uni">
+                 <button onclick="history.back()">⬅ movies</button>
         <section>
       
         <form method="post"  action="/movies/set_update" name="update_movie">
@@ -19,8 +22,15 @@
         <label for="movie_cover">Movie cover (link)</label><br>  
         <input type="text" name ="movie_cover"  value="<%= movie.link %>"><br>
         <input  type="submit" value="✓">
-         </form>    
+         </form> 
+         
+   
         </section>
+      
+
+        </div>
+       
+        
 
 
    
