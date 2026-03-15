@@ -14,6 +14,16 @@ import { run } from "node:test";
     );`
     );
 
+    //    db.exec(
+    // `CREATE TABLE IF NOT EXISTS user (
+    //     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    //     login UNIQUE TEXT NOT NULL,
+    //     password TEXT NOT NULL
+      
+    // );`
+    // );
+
+
 
 
 
@@ -61,9 +71,15 @@ import { run } from "node:test";
     })) 
     return result;          //funkcja mapout zwraca listę filmów
     }
+
+    export function checkPass(pass,r_pass){
+        return pass === r_pass;
+    } 
+
     export default{
     mapout,
     addToList,
     deleteFromList,
-    updateMovieList
+    updateMovieList,
+    checkPass
     };

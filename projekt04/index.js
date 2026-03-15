@@ -1,6 +1,6 @@
 import express from "express";
 import morgan from "morgan";
-import movies from "./models/movies.js";
+import movies, { checkPass } from "./models/movies.js";
 const port = 8000;
 
 
@@ -13,9 +13,18 @@ app.use(express.urlencoded({extended: true}));
 app.use(morgan("dev"));
 
 app.get("/",(req,res)=> {
-    res.redirect("/filmy");
+    res.render("login");
    
-})
+});
+
+app.get("/login_site",(req,res) => {
+    res.render("login");
+});
+
+app.get("/signup_site",(req,res) =>{
+ res.render("signup");
+});
+
 
 app.get("/filmy", (req, res) => { 
 res.render("filmy",{
@@ -28,6 +37,15 @@ res.render("filmy",{
 
 app.get("/add_movie",(req,res)=>{
     res.render("add_movie", { title: "Dodaj film" });
+});
+
+app.post("/sign_up",(req,res) => {
+    if(!checkPass(req.body.password,req.body.r_password)){
+        console.log("passwords arent same");
+       
+    }
+     res.redirect("/filmy");
+
 })
 
 app.post("/movies/new",(req,res)=>{

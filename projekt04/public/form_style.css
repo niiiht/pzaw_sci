@@ -10,11 +10,12 @@ body{
 
 h3{
     font-size: 40px;
+    margin-top: 20px;
     font-family: cursive;
     font-style: italic;
     text-align: center;
 }
-.uni{
+/* .uni{
     background-image: url('uni.gif');
     background-size: cover;
     background-repeat: no-repeat;
@@ -26,7 +27,7 @@ h3{
     padding: 20px;
     position: relative;
     
-}
+} */
 section{
     display: flex;
     justify-content: center;
