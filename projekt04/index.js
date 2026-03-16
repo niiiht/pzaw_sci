@@ -42,9 +42,12 @@ app.get("/add_movie",(req,res)=>{
 app.post("/sign_up",(req,res) => {
     if(!checkPass(req.body.password,req.body.r_password)){
         console.log("passwords arent same");
+        res.redirect("/signup_site");
        
+    }else{
+        res.redirect("/filmy");
     }
-     res.redirect("/filmy");
+     
 
 })
 
