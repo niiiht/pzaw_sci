@@ -1,6 +1,9 @@
 import express from "express";
 import morgan from "morgan";
 import movies, { checkPass } from "./models/movies.js";
+import session from "express-session";
+import cookieParser from "cookie-parser";
+
 const port = 8000;
 
 
@@ -11,6 +14,30 @@ app.set('views', './views');
 app.use(express.static("public"));
 app.use(express.urlencoded({extended: true}));
 app.use(morgan("dev"));
+
+
+app.use(cookieParser());
+
+app.use(session({
+    secret: "key", 
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 1000 * 60 * 60, 
+        httpOnly: true 
+    }
+}));
+function auth(req, res, next) {
+    if (!req.session.user) {
+        return res.redirect("/login_site");
+    }
+    next();
+}
+app.use((req, res, next) => {
+    res.locals.user = req.session.user || null;
+
+    next();
+});
 
 app.get("/",(req,res)=> {
     res.render("login");
@@ -26,28 +53,44 @@ app.get("/signup_site",(req,res) =>{
 });
 
 
-app.get("/filmy", (req, res) => { 
-res.render("filmy",{
-    title:"filmy",
-    nazwa: movies.mapout(),
-
+app.get("/filmy", auth, (req, res) => {
+    res.render("filmy", {
+        title: "filmy",
+        nazwa: movies.mapout()
+    });
 });
 
-});
+
 
 app.get("/add_movie",(req,res)=>{
     res.render("add_movie", { title: "Dodaj film" });
 });
 
 app.post("/sign_up",(req,res) => {
-    if(!checkPass(req.body.password,req.body.r_password)){
-        console.log("passwords arent same");
+    if(!movies.checkPass(req.body.password,req.body.r_password)){
+        return  res.render("signup", {
+            error: "hasla nie sa takie same"
+        });
        
+    }else{
+        movies.addPass(req.body.login,req.body.password);
+        req.session.user = req.body.login;
+        res.redirect("/filmy")
+
     }
-     res.redirect("/filmy");
-
+     
 })
+app.post("/log_in", (req,res)=>{
+    if(!movies.verifyU(req.body.login,req.body.password)){
+        return      res.render("login", {
+            error: "Niepoprawne dane"
+        });
+    }else{
+        req.session.user = req.body.login;
 
+        res.redirect('/filmy');
+    };
+})
 app.post("/movies/new",(req,res)=>{
     movies.addToList(req.body.movie_name,req.body.movie_synopis);
     console.log(req.body)

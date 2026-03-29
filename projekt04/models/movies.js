@@ -1,5 +1,6 @@
     import { DatabaseSync } from "node:sqlite";
 import { run } from "node:test";
+import crypto from "crypto";
 
     const db_path = "./movies.sqlite";
     const db = new DatabaseSync(db_path);
@@ -14,14 +15,15 @@ import { run } from "node:test";
     );`
     );
 
-    //    db.exec(
-    // `CREATE TABLE IF NOT EXISTS user (
-    //     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    //     login UNIQUE TEXT NOT NULL,
-    //     password TEXT NOT NULL
+       db.exec(
+    `CREATE TABLE IF NOT EXISTS users (
+        user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        login TEXT UNIQUE NOT NULL,
+        hash TEXT NOT NULL,
+        salt TEXT NOT NULL
       
-    // );`
-    // );
+    );`
+    );
 
 
 
@@ -34,14 +36,16 @@ import { run } from "node:test";
 
     const db_insert = db.prepare('INSERT INTO movies (name, synopis, cover) VALUES (?, ?, ?)');
     const db_select = db.prepare('SELECT * FROM movies');
-    const db_delete = db.prepare('DELETE FROM movies WHERE movie_id = ?')
-    const db_update = db.prepare(' UPDATE movies SET name = ?, synopis = ?, cover = ? WHERE movie_id = ?')
+    const db_delete = db.prepare('DELETE FROM movies WHERE movie_id = ?');
+    const db_update = db.prepare(' UPDATE movies SET name = ?, synopis = ?, cover = ? WHERE movie_id = ?');
+    const db_users_insert = db.prepare('INSERT INTO users (login, hash,salt) VALUES (?,?,?)');
+    const db_users_select = db.prepare('SELECT * FROM users WHERE login = ?');
 
     if (process.env.POPULATE_DB) {
     console.log("Dodawanie danych testowych");
 
     for (let movie of movie_list) {
-      let item = db_insert.get(movie.name,movie.synopis,movie.link)
+      let item = db_insert.run(movie.name,movie.synopis,movie.link)
       console.log("Stworzono wpis :", movie);
     }
   }
@@ -76,10 +80,43 @@ import { run } from "node:test";
         return pass === r_pass;
     } 
 
+    export function addPass(login,pass){
+        const salt = crypto.randomBytes(128).toString('base64');
+        const iterations = 100000;
+        const keylen = 64;
+        const digest = 'sha512';
+
+        const hash = crypto.pbkdf2Sync(pass, salt, iterations, keylen, digest).toString('hex');
+
+        db_users_insert.run(login, hash, salt);
+
+
+  
+
+    }
+
+    export function verifyU(login,pass){
+        const user_data = db_users_select.get(login);
+
+        if(!user_data){
+
+         return false;
+        }
+        const hash = crypto.pbkdf2Sync(pass,user_data.salt,100000,64,'sha512').toString('hex');
+      
+
+        return hash === user_data.hash; 
+
+
+
+    }
+
     export default{
     mapout,
     addToList,
     deleteFromList,
     updateMovieList,
-    checkPass
+    checkPass,
+    addPass,
+    verifyU
     };
