@@ -3,7 +3,9 @@ import { run } from "node:test";
 import crypto from "crypto";
 
     const db_path = "./movies.sqlite";
-    const db = new DatabaseSync(db_path);
+    const db = new DatabaseSync(db_path, { readBigInts: true });
+    const one_hour =  60 * 60 * 1000;
+const theme_cookie = "page-theme";
 
     console.log("Tworzenie tabelki");
     db.exec(
@@ -111,6 +113,33 @@ import crypto from "crypto";
 
     }
 
+    	
+
+"use strict";
+
+
+
+export function themeChange(req, res) {
+  var theme = req.cookies[theme_cookie];
+  if (theme === "pink") {
+    theme = "purple";
+  } else {
+    theme = "pink";
+  }
+  res.cookie(theme_cookie, theme);
+
+  var next = req.query.next || "/";
+  res.redirect(next);
+}
+
+export function settings(req) {
+  const settings = {
+    theme: req.cookies[theme_cookie] || "pink",
+  };
+  return settings;
+}
+
+
     export default{
     mapout,
     addToList,
@@ -118,5 +147,7 @@ import crypto from "crypto";
     updateMovieList,
     checkPass,
     addPass,
-    verifyU
+    verifyU,
+    settings,
+    themeChange
     };

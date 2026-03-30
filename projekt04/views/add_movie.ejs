@@ -1,5 +1,6 @@
-    <!DOCTYPE html>
-    <html lang="en">
+	
+<!DOCTYPE html>
+<html data-theme="<%- app.theme %>" lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,13 @@
     <body>
           <h3>new movie</h3>
         <div class="uni">
-         <button onclick="history.back()">⬅ movies</button>
+         <div class="controls">
+                           <button onclick="history.back()">⬅</button>
+           <a href="/movies/changeTheme?next=<%- encodeURIComponent(page) %>">Change colors</a>
+           
+          
+          </div>
+
         <section>
       
         <form method="post"  action="/movies/new" name="new_movie">
@@ -24,6 +31,7 @@
         </section>
 
         </div>
+
    
     </body>
     <script>

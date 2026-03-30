@@ -2,10 +2,12 @@
     margin:0;
     padding:0;
 }
-body{
+html{
     background-color: lightpink;
 }
-
+html[data-theme='purple'] {
+    background-color: plum;
+}
 
 
 h3{
@@ -96,18 +98,14 @@ input[type=submit]{
 }
 
 button{
-   display: block;
-   padding: 5px;
+   padding: 5px 10px;
     border: 4px solid palevioletred;
-    background-color:palevioletred; 
+    background-color: palevioletred;
     color: white;
     border-radius: 10px;
     font-weight: bold;
-    font-size: 16px;
     cursor: pointer;
-    position: absolute;
-    left: 20px;
-    top: 0;
+    margin-bottom: 20px;
    
 }
 
@@ -117,3 +115,31 @@ input[type=submit]:hover{
     color:palevioletred;
     cursor: pointer;
 }
+
+a{
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    padding: 5px;
+    font-weight: bolder;
+    color:white;
+    font-size: 14px;
+
+    width: 50px;
+    height: auto;
+    border-radius:10px;
+    border: 4px solid palevioletred;
+    background-color:palevioletred;  
+ 
+}
+a:hover{
+    background-color: lightpink;
+    color:palevioletred;
+}
+.controls{
+        display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
+

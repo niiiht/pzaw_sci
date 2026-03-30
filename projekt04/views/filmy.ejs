@@ -1,5 +1,6 @@
+	
 <!DOCTYPE html>
-<html lang="en">
+<html data-theme="<%- app.theme %>" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +8,23 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+
 <div class="uni">
+<section class="controls">
+           <a href="/movies/changeTheme?next=<%- encodeURIComponent(page) %>">Change colors</a>
+
+    </section>
     <div class="container">
+   
     <h3>watchlist</h3>
   
         <ul>
         <% nazwa.forEach(film => { %>
-            <li> <strong><%= film.name %></strong><br><div class="box">
+            <li> <strong><%= film.name %></strong><br>
+              
+            <div class="box">
             <img src = "<%= film.link %>" alt = "<%= film.name %> photo">
+            
             <p class="syn"><%= film.synopis %></p>
             </div>
 
@@ -38,6 +48,7 @@
         <a href= "add_movie" target="_self">+</a>
 
     </div>
+
 
  
 </div>

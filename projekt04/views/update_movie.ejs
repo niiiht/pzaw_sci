@@ -1,5 +1,6 @@
-    <!DOCTYPE html>
-    <html lang="en">
+	
+<!DOCTYPE html>
+<html data-theme="<%- app.theme %>" lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,13 +8,23 @@
         <link rel="stylesheet" href="/form_style.css">
     </head>
     <body>
-          <h3>update movie</h3>
+
+                 <h3>update movie</h3>
+            <div class="controls">
+                           <button onclick="history.back()">⬅</button>
+           <a href="/movies/changeTheme?next=<%- encodeURIComponent(page) %>">Change colors</a>
+           
+          
+          </div>
+
             
               <div class="uni">
-                 <button onclick="history.back()">⬅ movies</button>
+              
+ 
+        
         <section>
       
-        <form method="post"  action="/movies/set_update" name="update_movie">
+        <form method="get"  action="/movies/set_update" name="update_movie">
         <input type="hidden" name="movie_id" value="<%= movie.movie_id %>">
          <label for="movie_name">Movie name</label><br>   
         <input  type="text" name ="movie_name" value="<%= movie.name %>"><br>
@@ -26,6 +37,7 @@
          
    
         </section>
+
       
 
         </div>
