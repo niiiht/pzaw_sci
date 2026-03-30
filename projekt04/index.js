@@ -79,7 +79,7 @@ app.post("/sign_up",(req,res) => {
         res.redirect("/filmy")
 
     }
-});
+});s
 app.post("/log_in", (req,res)=>{
     if(!movies.verifyU(req.body.login,req.body.password)){
         return      res.render("login", {
