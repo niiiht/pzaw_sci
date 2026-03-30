@@ -4,6 +4,7 @@ import movies, { checkPass } from "./models/movies.js";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 
+
 const port = 8000;
 const app = express();
 
@@ -14,6 +15,22 @@ app.use(express.urlencoded({extended: true}));
 app.use(morgan("dev"));
 app.use(cookieParser());
 
+app.use(session({
+
+  secret: "key",       
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 60 * 60 * 1000}
+}));
+
+function auth(req, res, next) {
+  if (req.session.user) {
+    next();
+  } else {
+    res.redirect("/login_site");
+  }
+}
+
 const sRouter = express.Router();
 sRouter.use("/changeTheme", movies.themeChange);
 app.use("/movies", sRouter);
@@ -21,6 +38,7 @@ app.use("/movies", sRouter);
 function settings(req, res, next) {
   res.locals.app = movies.settings(req);
   res.locals.page = req.path;
+  res.locals.user = req.session.user || null;
   next();
 }
 app.use(settings);
@@ -40,8 +58,12 @@ app.get("/signup_site",(req,res) =>{
  res.render("signup");
 });
 
+app.get("/logout",(req,res) = > {
+    
+})
 
-app.get("/filmy",  (req, res) => {
+
+app.get("/filmy", auth,  (req, res) => {
     res.render("filmy", {
         title: "filmy",
         nazwa: movies.mapout()
@@ -50,7 +72,7 @@ app.get("/filmy",  (req, res) => {
 
 
 
-app.get("/add_movie",(req,res)=>{
+app.get("/add_movie",auth,(req,res)=>{
     res.render("add_movie", { title: "Dodaj film" });
 });
 
@@ -74,12 +96,11 @@ app.post("/log_in", (req,res)=>{
             error: "Niepoprawne dane"
         });
     }else{
-       
-
+        req.session.user = req.body.login; 
         res.redirect('/filmy');
     };
 })
-app.post("/movies/new",(req,res)=>{
+app.post("/movies/new",auth,(req,res)=>{
     movies.addToList(req.body.movie_name,req.body.movie_synopis);
     console.log(req.body)
     
@@ -89,14 +110,14 @@ app.post("/movies/new",(req,res)=>{
     
 });
 
-app.post("/movies/delete", (req,res)=> {
+app.post("/movies/delete",auth, (req,res)=> {
     movies.deleteFromList(req.body.movie_id);
     console.log(req.body.movie_id);
 
     res.redirect('/filmy');
 });
 
-app.post("/movies/update", (req,res)=> {
+app.post("/movies/update",auth, (req,res)=> {
    
     const movie = movies.mapout().find( m => m.movie_id == req.body.movie_id);
     console.log(movie);
@@ -104,7 +125,7 @@ app.post("/movies/update", (req,res)=> {
 
 });
 
-app.post("/movies/set_update", (req,res) =>{
+app.post("/movies/set_update", auth,    (req,res) =>{
     movies.updateMovieList(req.body.movie_id,req.body.movie_name,req.body.movie_synopis,req.body.movie_cover);
     res.redirect('/filmy');
 });

@@ -12,6 +12,11 @@
 <div class="uni">
 <section class="controls">
            <a href="/movies/changeTheme?next=<%- encodeURIComponent(page) %>">Change colors</a>
+               <% if (user) { %>
+
+
+    <a href="/logout">Logout</a>
+      <% } %>
 
     </section>
     <div class="container">
@@ -48,6 +53,11 @@
         <a href= "add_movie" target="_self">+</a>
 
     </div>
+
+
+</div>
+   
+      
 
 
  
