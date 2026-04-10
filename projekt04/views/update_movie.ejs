@@ -24,7 +24,7 @@
         
         <section>
       
-        <form method="get"  action="/movies/set_update" name="update_movie">
+        <form method="post"  action="/movies/set_update" name="update_movie">
         <input type="hidden" name="movie_id" value="<%= movie.movie_id %>">
          <label for="movie_name">Movie name</label><br>   
         <input  type="text" name ="movie_name" value="<%= movie.name %>"><br>

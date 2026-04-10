@@ -58,7 +58,10 @@ app.get("/signup_site",(req,res) =>{
  res.render("signup");
 });
 
-app.get("/logout",(req,res) = > {
+app.get("/logout",(req,res) => {
+        req.session.destroy(() => {
+        res.redirect("/login_site");
+    });
     
 })
 
@@ -85,6 +88,10 @@ app.post("/sign_up",(req,res) => {
        
     }else{
         movies.addPass(req.body.login,req.body.password);
+        const user = movies.getUser(req.body.login);
+            req.session.user = {id:  Number(user.user_id),login: user.login,role: user.role};
+
+
        
         res.redirect("/filmy")
 
@@ -96,12 +103,14 @@ app.post("/log_in", (req,res)=>{
             error: "Niepoprawne dane"
         });
     }else{
-        req.session.user = req.body.login; 
+        const user = movies.getUser(req.body.login);
+
+        req.session.user = {id:  Number(user.user_id),login: user.login,role: user.role};
         res.redirect('/filmy');
     };
 })
 app.post("/movies/new",auth,(req,res)=>{
-    movies.addToList(req.body.movie_name,req.body.movie_synopis);
+    movies.addToList(req.body.movie_name,req.body.movie_synopis, req.body.movie_cover,req.session.user.id);
     console.log(req.body)
     
       res.redirect('/filmy');
@@ -111,9 +120,16 @@ app.post("/movies/new",auth,(req,res)=>{
 });
 
 app.post("/movies/delete",auth, (req,res)=> {
-    movies.deleteFromList(req.body.movie_id);
-    console.log(req.body.movie_id);
+      const movie = movies.getMovieById(req.body.movie_id);
 
+    if (
+        req.session.user.role !== 'admin' &&
+        movie.user_id !== req.session.user.id
+    ) {
+        return res.status(403).send("Brak dostępu");
+    }
+
+    movies.deleteFromList(req.body.movie_id);
     res.redirect('/filmy');
 });
 
@@ -125,7 +141,15 @@ app.post("/movies/update",auth, (req,res)=> {
 
 });
 
-app.post("/movies/set_update", auth,    (req,res) =>{
+app.post("/movies/set_update", auth,  (req,res) =>{
+       const movie = movies.getMovieById(req.body.movie_id);
+
+    if (
+        req.session.user.role !== 'admin' &&
+        movie.user_id !== req.session.user.id
+    ) {
+        return res.status(403).send("Brak dostępu");
+    }
     movies.updateMovieList(req.body.movie_id,req.body.movie_name,req.body.movie_synopis,req.body.movie_cover);
     res.redirect('/filmy');
 });

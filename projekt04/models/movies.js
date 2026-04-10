@@ -8,12 +8,14 @@ import crypto from "crypto";
 const theme_cookie = "page-theme";
 
     console.log("Tworzenie tabelki");
+
     db.exec(
-    `CREATE TABLE IF NOT EXISTS movies (
+    `CREATE TABLE IF NOT EXISTS  movies (
         movie_id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         synopis TEXT NOT NULL,
-        cover TEXT 
+        cover TEXT,
+        user_id INTEGER
     );`
     );
 
@@ -22,7 +24,8 @@ const theme_cookie = "page-theme";
         user_id INTEGER PRIMARY KEY AUTOINCREMENT,
         login TEXT UNIQUE NOT NULL,
         hash TEXT NOT NULL,
-        salt TEXT NOT NULL
+        salt TEXT NOT NULL,
+        role TEXT DEFAULT 'user'
       
     );`
     );
@@ -36,7 +39,7 @@ const theme_cookie = "page-theme";
         { name: "Close Encounters of the Third Kind", synopis:"Science fiction adventure about a group of people who attempt to contact alien intelligence. Roy Neary (Richard Dreyfuss) witnesses an unidentified flying object, and even has a 'sunburn' from its bright lights to prove it. Roy refuses to accept an explanation for what he saw and is prepared to give up his life to pursue the truth about UFOs.",link:"https://cms.ntflxthtrs.com/uploads/close_encounter_of_the_third_kind_EGYPTIAN_POSTER_e01660bddc.jpg"}, 
         {name:"Goonies", synopis:"Old-fashioned yarn about a band of adventurous kids who take on the might of a property developing company which plans to destroy their home to build a country club. When the children discover an old pirate map in the attic, they follow it into an underground cavern in search of lost treasure but come up against plenty of dangerous obstacles along the way.", link: "https://upload.wikimedia.org/wikipedia/en/c/c6/The_Goonies.jpg"}];
 
-    const db_insert = db.prepare('INSERT INTO movies (name, synopis, cover) VALUES (?, ?, ?)');
+    const db_insert = db.prepare('INSERT INTO movies (name, synopis, cover,user_id) VALUES (?, ?, ?,?)');
     const db_select = db.prepare('SELECT * FROM movies');
     const db_delete = db.prepare('DELETE FROM movies WHERE movie_id = ?');
     const db_update = db.prepare(' UPDATE movies SET name = ?, synopis = ?, cover = ? WHERE movie_id = ?');
@@ -51,10 +54,18 @@ const theme_cookie = "page-theme";
       console.log("Stworzono wpis :", movie);
     }
   }
+const adminExists = db.prepare('SELECT * FROM users WHERE login = ?').get('admin');
 
+if (!adminExists) {
+    const salt = crypto.randomBytes(128).toString('base64');
+    const hash = crypto.pbkdf2Sync('haslo123', salt, 100000, 64, 'sha512').toString('hex');
 
-    export function addToList(movie,syn,link) {
-        db_insert.run(movie,syn,link || 'https://assets.upflix.pl/media/plakat/2003/barbie-of-swan-lake__300_427.jpg');
+    db.prepare('INSERT INTO users (login, hash, salt, role) VALUES (?, ?, ?, ?)')
+      .run('admin', hash, salt, 'admin');
+}
+
+    export function addToList(movie,syn,link,user_id) {
+        db_insert.run(movie,syn,link || 'https://assets.upflix.pl/media/plakat/2003/barbie-of-swan-lake__300_427.jpg',user_id);
 
     } 
 
@@ -81,6 +92,9 @@ const theme_cookie = "page-theme";
     export function checkPass(pass,r_pass){
         return pass === r_pass;
     } 
+    export function getUser(login){
+    return db_users_select.get(login);
+}
 
     export function addPass(login,pass){
         const salt = crypto.randomBytes(128).toString('base64');
@@ -115,7 +129,9 @@ const theme_cookie = "page-theme";
 
     	
 
-"use strict";
+export function getMovieById(id){
+    return db.prepare('SELECT * FROM movies WHERE movie_id = ?').get(id);
+}
 
 
 
@@ -149,5 +165,7 @@ export function settings(req) {
     addPass,
     verifyU,
     settings,
-    themeChange
+    themeChange,
+    getUser,
+    getMovieById
     };
